@@ -127,8 +127,8 @@ class GazeboInterface(Node):
             self.entity_pose_y = random.randrange(-23, 23) / 10
         else:
             goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
-            self.entity_pose_x = goal_pose_list[rand_index][0]
-            self.entity_pose_y = goal_pose_list[rand_index][1]
+            self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+            self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
             self.IndexCounter = (self.IndexCounter + 1) % 5
 
 
