@@ -29,17 +29,14 @@ import sys
 
 #a node to generate goals
 class GazeboInterface(Node):
-    def __init__(self, stage):
+    def __init__(self, args):
         super().__init__('gazebo_interface')
-        self.stage = int(stage)
 
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'
         self.entity = open('./goal_box/model.sdf', 'r').read()
 
         # initial entity(Goal) position
-        self.entity_pose_x = 0.5
-        self.entity_pose_y = 0.0
         self.IndexCounter = 0
 
         #Initialize clients
@@ -114,6 +111,7 @@ class GazeboInterface(Node):
     def initialize_env_callback(self, request, response):
         self.delete_entity()
         self.reset_simulation()
+        self.generate_goal_pose()
         self.spawn_entity()
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
@@ -122,17 +120,13 @@ class GazeboInterface(Node):
         return response
 
     def generate_goal_pose(self):
-        if self.stage != 4:
-            self.entity_pose_x = random.randrange(-23, 23) / 10
-            self.entity_pose_y = random.randrange(-23, 23) / 10
-        else:
-            goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
-            self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
-            self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
-            self.IndexCounter = (self.IndexCounter + 1) % 5
+        goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
+        self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+        self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+        self.IndexCounter = (self.IndexCounter + 1) % 5
 
 
-def main(args=sys.argv[1]):
+def main(args=sys.argv[0]):
     rclpy.init(args=args)
     gazebo_interface = GazeboInterface(args)
     while True:
