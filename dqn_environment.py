@@ -40,7 +40,7 @@ class RLEnvironment(Node):
         self.robot_pose_y = 0.0
 
         self.action_size = 5
-        self.time_out = 1000 # maximum number of actions in each episode
+        self.time_out = 1000000 # maximum number of actions in each episode
 
         self.done = False
         self.fail = False
@@ -49,7 +49,7 @@ class RLEnvironment(Node):
         # parameters to calculate the reward
         self.goal_angle = 0.0
         self.goal_distance = 1.0
-        self.init_goal_distance = 0.5
+        self.init_goal_distance = 0.1
         self.scan_ranges = []
         self.min_obstacle_distance = 10.0
 
@@ -238,7 +238,7 @@ class RLEnvironment(Node):
             # + for succeed, - for fail
             if self.succeed:
                 print("succeed")
-                reward = 30.0
+                reward = 300.0
             elif self.fail:
                 print("fail")
                 reward = -10.0
