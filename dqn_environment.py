@@ -231,7 +231,7 @@ class RLEnvironment(Node):
 
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.50:
-                obstacle_reward = -3.0  # self.min_obstacle_distance - 0.45
+                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
 
             # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
             reward = distance_reward + obstacle_reward + yaw_reward
