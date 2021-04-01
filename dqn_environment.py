@@ -237,8 +237,10 @@ class RLEnvironment(Node):
             reward = distance_reward + obstacle_reward + yaw_reward
             # + for succeed, - for fail
             if self.succeed:
+                print("succeed")
                 reward = 30.0
             elif self.fail:
+                print("fail")
                 reward = -10.0
         else:
             if self.succeed:
