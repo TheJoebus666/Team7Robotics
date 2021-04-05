@@ -208,7 +208,7 @@ class RLEnvironment(Node):
             
 
         # Fail
-        if self.min_obstacle_distance < 0.25:  # unit: m
+        if self.min_obstacle_distance < 0.2:  # unit: m - WAS 0.25
             self.get_logger().info("Collision happened")
             self.fail = True
             self.done = True
