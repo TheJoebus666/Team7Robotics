@@ -205,6 +205,7 @@ class RLEnvironment(Node):
             self.init_goal_distance = math.sqrt(
             (self.goal_pose_x - self.robot_pose_x) ** 2
             + (self.goal_pose_y - self.robot_pose_y) ** 2)
+            print("NEW INITIAL GOAL DISTANCE IS " + self.init_goal_distance)
             
 
         # Fail
