@@ -49,7 +49,8 @@ class RLEnvironment(Node):
         # parameters to calculate the reward
         self.goal_angle = 0.0
         self.goal_distance = 1.0
-        self.init_goal_distance = 0.1
+        #hypotenuse of sqrt(1.7**2 + 1.7**2)
+        self.init_goal_distance = 2.4
         self.scan_ranges = []
         self.min_obstacle_distance = 10.0
 
