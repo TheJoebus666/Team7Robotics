@@ -202,6 +202,10 @@ class RLEnvironment(Node):
             self.cmd_vel_pub.publish(Twist())  # robot stop
             self.local_step = 0
             self.call_task_succeed()
+            self.init_goal_distance = math.sqrt(
+            (self.goal_pose_x - self.robot_pose_x) ** 2
+            + (self.goal_pose_y - self.robot_pose_y) ** 2)
+            
 
         # Fail
         if self.min_obstacle_distance < 0.25:  # unit: m
@@ -232,14 +236,14 @@ class RLEnvironment(Node):
 
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.50:
-                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
+                obstacle_reward = -2.0  # self.min_obstacle_distance - 0.45
 
             # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
             reward = distance_reward + obstacle_reward + yaw_reward
             # + for succeed, - for fail
             if self.succeed:
                 print("succeed")
-                reward = 300.0
+                reward = 100.0
             elif self.fail:
                 print("fail")
                 reward = -10.0
