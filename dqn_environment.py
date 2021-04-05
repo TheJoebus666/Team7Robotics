@@ -195,7 +195,7 @@ class RLEnvironment(Node):
         self.local_step += 1
 
         # Succeed
-        if self.goal_distance < 0.20:  # unit: m
+        if self.goal_distance < 0.25:  # unit: m
             self.get_logger().info("Goal Reached")
             self.succeed = True
             self.done = True
