@@ -80,7 +80,7 @@ class DQNAgent(Node):
         # DQN hyperparameter
         self.discount_factor = 0.99
         #was originally 0.0007
-        self.learning_rate = 0.01
+        self.learning_rate = 0.025
         self.epsilon = 1.0
         self.step_counter = 0
         self.epsilon_decay = 20000 * self.stage
