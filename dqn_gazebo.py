@@ -29,8 +29,9 @@ import sys
 
 #a node to generate goals
 class GazeboInterface(Node):
-    def __init__(self, args):
+    def __init__(self, training):
         super().__init__('gazebo_interface')
+        self.training = bool(training)
 
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'
@@ -121,13 +122,23 @@ class GazeboInterface(Node):
         return response
 
     def generate_goal_pose(self):
-        goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
-        self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
-        self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
-        self.IndexCounter = (self.IndexCounter + 1) % 5
+        if self.training:
+            self.entity_pose_x = random.randrange(-23, 23) / 10
+            self.entity_pose_y = random.randrange(-23, 23) / 10
+
+            while abs(self.entity_pose_x) > 0.8 && abs(self.entity_pose_x) < 1.2:
+                self.entity_pose_x = random.randrange(-23, 23) / 10
+            
+            while abs(self.entity_pose_y) > 0.8 && abs(self.entity_pose_y) < 1.2:
+                self.entity_pose_y = random.randrange(-23, 23) / 10
+        else:
+            goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
+            self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+            self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+            self.IndexCounter = (self.IndexCounter + 1) % 5
 
 
-def main(args=sys.argv[0]):
+def main(args=sys.argv[1]):
     rclpy.init(args=args)
     gazebo_interface = GazeboInterface(args)
     while True:
