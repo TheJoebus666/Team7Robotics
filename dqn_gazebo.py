@@ -126,10 +126,10 @@ class GazeboInterface(Node):
             self.entity_pose_x = random.randrange(-23, 23) / 10
             self.entity_pose_y = random.randrange(-23, 23) / 10
 
-            while abs(self.entity_pose_x) > 0.8 && abs(self.entity_pose_x) < 1.2:
+            while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
                 self.entity_pose_x = random.randrange(-23, 23) / 10
             
-            while abs(self.entity_pose_y) > 0.8 && abs(self.entity_pose_y) < 1.2:
+            while abs(self.entity_pose_y) > 0.8 and abs(self.entity_pose_y) < 1.2:
                 self.entity_pose_y = random.randrange(-23, 23) / 10
         else:
             goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
