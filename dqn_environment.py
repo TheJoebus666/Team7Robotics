@@ -244,10 +244,10 @@ class RLEnvironment(Node):
             # + for succeed, - for fail
             if self.succeed:
                 print("succeed")
-                reward = 100.0
+                reward = 200.0
             elif self.fail:
                 print("fail")
-                reward = -10.0
+                reward = -150.0
         else:
             if self.succeed:
                 reward = 5.0
