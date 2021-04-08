@@ -37,6 +37,8 @@ class GazeboInterface(Node):
         else:
             self.training = True
 
+        self.consecutive_fails = 0
+
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'
         self.entity = open('./goal_box/model.sdf', 'r').read()
@@ -101,20 +103,23 @@ class GazeboInterface(Node):
         response.pose_y = self.entity_pose_y
         response.success = True
         print('A new goal generated.')
+        self.consecutive_fails = 0
         return response
 
     def task_failed_callback(self, request, response):
+        self.consecutive_fails = self.consecutive_fails + 1
         self.delete_entity()
         self.reset_simulation()
         self.spawn_entity()
 
-        if not self.training:
+        if not self.training or self.consecutive_fails > 15:
             self.generate_goal_pose()
         
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
         print('Environment reset')
+        
         return response
 
     def initialize_env_callback(self, request, response):
