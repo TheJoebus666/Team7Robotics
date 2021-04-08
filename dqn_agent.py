@@ -83,7 +83,8 @@ class DQNAgent(Node):
         self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 20000 * self.stage
+        #WAS 20000 * self.stage
+        self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
         self.batch_size = 128
 
@@ -250,7 +251,10 @@ class DQNAgent(Node):
     def get_action(self, state):
         if self.train_mode:
             self.step_counter += 1
-            self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
+
+            #self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
+            if (self.epsilon > self.epsilon_min):
+                self.epsilon *= self.epsilon_decay
 
             lucky = rnd.random()
             if lucky > (1 - self.epsilon):
