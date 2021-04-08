@@ -102,7 +102,6 @@ class GazeboInterface(Node):
     def task_failed_callback(self, request, response):
         self.delete_entity()
         self.reset_simulation()
-        self.generate_goal_pose()
         self.spawn_entity()
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
