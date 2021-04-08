@@ -31,7 +31,7 @@ from turtlebot3_msgs.srv import Dqn
 from std_srvs.srv import Empty
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
