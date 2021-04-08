@@ -31,7 +31,11 @@ import sys
 class GazeboInterface(Node):
     def __init__(self, training):
         super().__init__('gazebo_interface')
-        self.training = bool(training)
+
+        if training.lower() == 'false' or training == '0':
+            self.training = False
+        else:
+            self.training = True
 
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'

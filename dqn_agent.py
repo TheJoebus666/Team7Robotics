@@ -31,7 +31,7 @@ from turtlebot3_msgs.srv import Dqn
 from std_srvs.srv import Empty
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
@@ -80,10 +80,11 @@ class DQNAgent(Node):
         # DQN hyperparameter
         self.discount_factor = 0.99
         #was originally 0.0007
-        self.learning_rate = 0.025
+        self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 20000 * self.stage
+        #WAS 20000 * self.stage
+        self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
         self.batch_size = 128
 
@@ -186,6 +187,12 @@ class DQNAgent(Node):
                     with open(self.json_path, 'w') as outfile:
                         json.dump(param_dictionary, outfile)
 
+            #EPSILON CALCULATION
+            #self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
+            self.epsilon *= self.epsilon_decay
+            if (self.epsilon < self.epsilon_min):
+                self.epsilon = self.epsilon_min   
+
     def reset_environment(self):
         while not self.reset_environment_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().warn('Reset environment client failed to connect to the server, try again ...')
@@ -228,9 +235,14 @@ class DQNAgent(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(256, activation='relu'))
-            model.add(Dense(128, activation='relu'))
+            #model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
+            #model.add(Dense(256, activation='relu'))
+            #model.add(Dense(128, activation='relu'))
+
+
+            model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
+            model.add(Dense(64,activation='relu'))
+            model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
@@ -245,7 +257,8 @@ class DQNAgent(Node):
     def get_action(self, state):
         if self.train_mode:
             self.step_counter += 1
-            self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
+
+            #MOVED EPSILON CALC FROM HERE TO PER EPISODE
 
             lucky = rnd.random()
             if lucky > (1 - self.epsilon):
