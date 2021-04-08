@@ -114,6 +114,7 @@ class GazeboInterface(Node):
 
         if not self.training or self.consecutive_fails > 15:
             self.generate_goal_pose()
+            self.consecutive_fails = 0
         
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
