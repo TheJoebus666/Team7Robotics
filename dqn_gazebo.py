@@ -103,6 +103,10 @@ class GazeboInterface(Node):
         self.delete_entity()
         self.reset_simulation()
         self.spawn_entity()
+
+        if not self.training:
+            self.generate_goal_pose()
+        
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
