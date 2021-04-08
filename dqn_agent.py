@@ -83,7 +83,8 @@ class DQNAgent(Node):
         self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 20000 * self.stage
+        #WAS 20000 * self.stage
+        self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
         self.batch_size = 128
 
