@@ -187,6 +187,12 @@ class DQNAgent(Node):
                     with open(self.json_path, 'w') as outfile:
                         json.dump(param_dictionary, outfile)
 
+            #EPSILON CALCULATION
+            #self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
+            self.epsilon *= self.epsilon_decay
+            if (self.epsilon < self.epsilon_min):
+                self.epsilon = self.epsilon_min   
+
     def reset_environment(self):
         while not self.reset_environment_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().warn('Reset environment client failed to connect to the server, try again ...')
@@ -252,9 +258,7 @@ class DQNAgent(Node):
         if self.train_mode:
             self.step_counter += 1
 
-            #self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
-            if (self.epsilon > self.epsilon_min):
-                self.epsilon *= self.epsilon_decay
+            #MOVED EPSILON CALC FROM HERE TO PER EPISODE
 
             lucky = rnd.random()
             if lucky > (1 - self.epsilon):
