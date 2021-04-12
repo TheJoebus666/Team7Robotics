@@ -74,7 +74,7 @@ class DQNAgent(Node):
         self.train_mode = True
         
         # State size and action size
-        self.state_size = 28
+        self.state_size = 26
         self.action_size = 5
         self.max_training_episodes = 10003
 
