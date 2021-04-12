@@ -49,8 +49,7 @@ class RLEnvironment(Node):
         # parameters to calculate the reward
         self.goal_angle = 0.0
         self.goal_distance = 1.0
-        #hypotenuse of sqrt(1.7**2 + 1.7**2)
-        self.init_goal_distance = 2.4
+        self.init_goal_distance = 0.1
         self.scan_ranges = []
         self.min_obstacle_distance = 10.0
 
@@ -195,7 +194,7 @@ class RLEnvironment(Node):
         self.local_step += 1
 
         # Succeed
-        if self.goal_distance < 0.25:  # unit: m
+        if self.goal_distance < 0.20:  # unit: m
             self.get_logger().info("Goal Reached")
             self.succeed = True
             self.done = True
@@ -205,8 +204,6 @@ class RLEnvironment(Node):
             self.init_goal_distance = math.sqrt(
             (self.goal_pose_x - self.robot_pose_x) ** 2
             + (self.goal_pose_y - self.robot_pose_y) ** 2)
-            print("NEW INITIAL GOAL DISTANCE IS " + str(self.init_goal_distance))
-            
 
         # Fail
         if self.min_obstacle_distance < 0.25:  # unit: m
@@ -237,7 +234,7 @@ class RLEnvironment(Node):
 
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.50:
-                obstacle_reward = -2.0  # self.min_obstacle_distance - 0.45
+                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
 
             # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
             reward = distance_reward + obstacle_reward + yaw_reward

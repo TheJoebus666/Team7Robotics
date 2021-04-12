@@ -72,8 +72,9 @@ class DQNAgent(Node):
         # Stage
         self.stage = int(stage)
         self.train_mode = True
+        
         # State size and action size
-        self.state_size = 26  # 180 lidar rays
+        self.state_size = 28
         self.action_size = 5
         self.max_training_episodes = 10003
 
@@ -86,10 +87,10 @@ class DQNAgent(Node):
         #WAS 20000 * self.stage
         self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
-        self.batch_size = 128
+        self.batch_size = 64
 
         # Replay memory
-        self.replay_memory = collections.deque(maxlen=500000)
+        self.replay_memory = collections.deque(maxlen=1000000)
         self.min_replay_memory_size = 5000
 
         # Build model and target model

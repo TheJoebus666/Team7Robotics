@@ -29,8 +29,15 @@ import sys
 
 #a node to generate goals
 class GazeboInterface(Node):
-    def __init__(self, args):
+    def __init__(self, training):
         super().__init__('gazebo_interface')
+
+        if training.lower() == 'false' or training == '0':
+            self.training = False
+        else:
+            self.training = True
+
+        self.consecutive_fails = 0
 
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'
@@ -96,17 +103,24 @@ class GazeboInterface(Node):
         response.pose_y = self.entity_pose_y
         response.success = True
         print('A new goal generated.')
+        self.consecutive_fails = 0
         return response
 
     def task_failed_callback(self, request, response):
+        self.consecutive_fails = self.consecutive_fails + 1
         self.delete_entity()
         self.reset_simulation()
-        self.generate_goal_pose()
         self.spawn_entity()
+
+        if not self.training or self.consecutive_fails > 15:
+            self.generate_goal_pose()
+            self.consecutive_fails = 0
+        
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
         print('Environment reset')
+        
         return response
 
     def initialize_env_callback(self, request, response):
@@ -121,13 +135,23 @@ class GazeboInterface(Node):
         return response
 
     def generate_goal_pose(self):
-        goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
-        self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
-        self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
-        self.IndexCounter = (self.IndexCounter + 1) % 5
+        if self.training:
+            self.entity_pose_x = random.randrange(-23, 23) / 10
+            self.entity_pose_y = random.randrange(-23, 23) / 10
+
+            while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
+                self.entity_pose_x = random.randrange(-23, 23) / 10
+            
+            while abs(self.entity_pose_y) > 0.8 and abs(self.entity_pose_y) < 1.2:
+                self.entity_pose_y = random.randrange(-23, 23) / 10
+        else:
+            goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
+            self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+            self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+            self.IndexCounter = (self.IndexCounter + 1) % 5
 
 
-def main(args=sys.argv[0]):
+def main(args=sys.argv[1]):
     rclpy.init(args=args)
     gazebo_interface = GazeboInterface(args)
     while True:
