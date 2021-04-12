@@ -123,7 +123,7 @@ class RLEnvironment(Node):
     def call_task_failed(self):
         """
         When the task is failed (either collision or timeout) this client will send a request to the gazebo_interface service
-        the client waits until gets back the response (goal position) form service
+        the client waits until gets back the response (goal position) from service
         :return:
         """
         while not self.task_failed_client.wait_for_service(timeout_sec=1.0):
@@ -183,14 +183,11 @@ class RLEnvironment(Node):
         :return:
         """
         state = list()
-        # state.append(float(self.goal_pose_x))
-        # state.append(float(self.goal_pose_y))
         state.append(float(self.goal_distance))
         state.append(float(self.goal_angle))
 
         for var in self.scan_ranges:
             state.append(float(var))
-            #state.append(float(0.0))
         self.local_step += 1
 
         # Succeed

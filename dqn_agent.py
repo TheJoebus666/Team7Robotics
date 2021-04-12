@@ -80,11 +80,9 @@ class DQNAgent(Node):
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        #was originally 0.0007
         self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        #WAS 20000 * self.stage
         self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
         self.batch_size = 64
@@ -166,9 +164,10 @@ class DQNAgent(Node):
 
                     print(
                         "Episode:", episode,
-                        "score:", score,
+                        "score:", round(score, 3)
                         "memory length:", len(self.replay_memory),
-                        "epsilon:", self.epsilon)
+                        "epsilon:", round(self.epsilon, 3)
+                        )
 
                     param_keys = ['epsilon']
                     param_values = [self.epsilon]
