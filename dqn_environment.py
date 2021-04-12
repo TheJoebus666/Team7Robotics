@@ -230,15 +230,12 @@ class RLEnvironment(Node):
         if self.train_mode:
             yaw_reward = 1 - 2 * math.sqrt(math.fabs(self.goal_angle / math.pi))
 
-            distance_reward = (2 * self.init_goal_distance) / (self.init_goal_distance + self.goal_distance) - 1
-
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.50:
                 obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
 
-            # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
-            reward = distance_reward + obstacle_reward + yaw_reward
-            # + for succeed, - for fail
+            reward = obstacle_reward + (yaw_reward * ( 1 / self.goal_distance ))
+
             if self.succeed:
                 print("succeed")
                 reward = 200.0
