@@ -18,7 +18,7 @@
 
 import collections
 import tensorflow as tf
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
@@ -69,8 +69,8 @@ class DQNTest(Node):
         self.model = self.create_qnetwork()
 
         # Load saved models
-        self.model.set_weights(load_model('stage1_episode700.h5').get_weights())
-        with open('stage1_episode700.json') as outfile:
+        self.model.set_weights(load_model('stage1_episode300.h5').get_weights())
+        with open('stage1_episode300.json') as outfile:
             param = json.load(outfile)
             self.epsilon = param.get('epsilon')
 
@@ -145,9 +145,9 @@ class DQNTest(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(256, activation='relu'))
-            model.add(Dense(128, activation='relu'))
+            model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
+            model.add(Dense(64,activation='relu'))
+            model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
