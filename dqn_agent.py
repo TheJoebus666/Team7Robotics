@@ -69,8 +69,10 @@ class DQNAgent(Node):
     def __init__(self, stage):
         super().__init__('dqn_agent')
 
-        # Stage
-        self.stage = int(stage)
+        # Resume from model file parameters
+        self.load_model = True
+        self.stage = 1
+        self.load_episode = 200
         self.train_mode = True
         
         # State size and action size
@@ -99,8 +101,6 @@ class DQNAgent(Node):
         self.target_update_after_counter = 0
 
         # Load saved models
-        self.load_model = False
-        self.load_episode = 0
         self.model_path = 'stage' + str(self.stage) + '_episode' + str(self.load_episode) + '.h5'
         self.json_path = self.model_path.replace('.h5','.json')
 
