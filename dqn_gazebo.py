@@ -63,7 +63,9 @@ class GazeboInterface(Node):
 
     def reset_simulation(self):
         reset_req = Empty.Request()
-        self.IndexCounter = 0
+
+        if not self.training:
+            self.IndexCounter = 0
 
         # check connection to the service server
         while not self.reset_simulation_client.wait_for_service(timeout_sec=1.0):
