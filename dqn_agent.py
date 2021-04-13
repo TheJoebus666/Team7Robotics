@@ -79,13 +79,13 @@ class DQNAgent(Node):
         self.max_training_episodes = 10003
 
         # DQN hyperparameter
-        self.discount_factor = 0.99
-        self.learning_rate = 0.00025
+        self.discount_factor = 0.998
+        self.learning_rate = 0.00030
         self.epsilon = 1.0
         self.step_counter = 0
         self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
-        self.batch_size = 64
+        self.batch_size = 40
 
         # Replay memory
         self.replay_memory = collections.deque(maxlen=1000000)
@@ -235,11 +235,6 @@ class DQNAgent(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            #model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
-            #model.add(Dense(256, activation='relu'))
-            #model.add(Dense(128, activation='relu'))
-
-
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
             model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))

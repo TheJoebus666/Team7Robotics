@@ -105,7 +105,7 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('-', end = '')
+        print('#')
         self.consecutive_fails = 0
         return response
 
@@ -122,7 +122,7 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('#', end = '')
+        print('-')
         
         return response
 
