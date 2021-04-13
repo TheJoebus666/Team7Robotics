@@ -59,6 +59,7 @@ class GazeboInterface(Node):
 
         print('- (minus) = Episode failed')
         print('# (hash)  = Episode succeeded')
+        print('', end='')
 
     def reset_simulation(self):
         reset_req = Empty.Request()
@@ -105,7 +106,7 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('#')
+        print('#', end='')
         self.consecutive_fails = 0
         return response
 
@@ -115,14 +116,14 @@ class GazeboInterface(Node):
         self.reset_simulation()
         self.spawn_entity()
 
-        if not self.training or self.consecutive_fails > 15:
+        if not self.training or self.consecutive_fails > 20:
             self.generate_goal_pose()
             self.consecutive_fails = 0
         
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('-')
+        print('-', end='')
         
         return response
 
@@ -135,24 +136,54 @@ class GazeboInterface(Node):
         response.pose_y = self.entity_pose_y
         response.success = True
         print('Environment initialized')
+        print('', end='')
         return response
 
     def generate_goal_pose(self):
         if self.training:
-            self.entity_pose_x = random.randrange(-23, 23) / 10
-            self.entity_pose_y = random.randrange(-23, 23) / 10
-
-            while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
-                self.entity_pose_x = random.randrange(-23, 23) / 10
+            if IndexCounter > 18:
+                generate_random_pose()
+            else:
+                goal_pose_list = [
+                    [0.72, 0],
+                    [1.45, 0],
+                    [0.63, 0.56],
+                    [0.63, -0.49],
+                    [0.36, -1.13],
+                    [0.36, 1.06],
+                    [-0.41, 1.06],
+                    [-0.41, -1.13],
+                    [0.36, 1.64],
+                    [0.36, -1.64],
+                    [1.78, 0.46],
+                    [1.78, -1.05],
+                    [-0.54, -1.67],
+                    [-0.54, 1.67],
+                    [-1.18, 0.03],
+                    [1.7, 1.7],
+                    [-1.7, 1.7],
+                    [1.7, -1.7],
+                    [-1.7, -1.7]
+                ]
+                self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+                self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+                self.IndexCounter = self.IndexCounter + 1
             
-            while abs(self.entity_pose_y) > 0.8 and abs(self.entity_pose_y) < 1.2:
-                self.entity_pose_y = random.randrange(-23, 23) / 10
         else:
             goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
             self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
             self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
             self.IndexCounter = (self.IndexCounter + 1) % 5
 
+    def generate_random_pose(self):
+        self.entity_pose_x = random.randrange(-23, 23) / 10
+        self.entity_pose_y = random.randrange(-23, 23) / 10
+
+        while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
+            self.entity_pose_x = random.randrange(-23, 23) / 10
+        
+        while abs(self.entity_pose_y) > 0.8 and abs(self.entity_pose_y) < 1.2:
+            self.entity_pose_y = random.randrange(-23, 23) / 10
 
 def main(args=sys.argv[1]):
     rclpy.init(args=args)

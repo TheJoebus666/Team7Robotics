@@ -79,11 +79,11 @@ class DQNAgent(Node):
         self.max_training_episodes = 10003
 
         # DQN hyperparameter
-        self.discount_factor = 0.998
-        self.learning_rate = 0.00030
+        self.discount_factor = 0.99
+        self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 0.99
+        self.epsilon_decay = 0.998
         self.epsilon_min = 0.05
         self.batch_size = 40
 
@@ -163,9 +163,9 @@ class DQNAgent(Node):
                         self.dqn_reward_metric.reset_states()
 
                     print(
-                        "Episode:", episode,
-                        "score:", round(score, 3),
-                        "memory length:", len(self.replay_memory),
+                        "Episode:", episode, "\t",
+                        "score:", round(score, 3), "\t",
+                        "memory length:", len(self.replay_memory), "\t",
                         "epsilon:", round(self.epsilon, 3)
                         )
 
