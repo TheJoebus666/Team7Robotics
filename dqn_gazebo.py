@@ -145,8 +145,8 @@ class GazeboInterface(Node):
                 generate_random_pose()
             else:
                 goal_pose_list = [
-                    [0.72, 0],
-                    [1.45, 0],
+                    [0.72, 0.0],
+                    [1.45, 0.0],
                     [0.63, 0.56],
                     [0.63, -0.49],
                     [0.36, -1.13],
