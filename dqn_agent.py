@@ -69,10 +69,12 @@ class DQNAgent(Node):
     def __init__(self, stage):
         super().__init__('dqn_agent')
 
-        # Resume from model file parameters
-        self.load_model = True
+        # Resume from model file
+        self.load_model = False
         self.stage = 1
         self.load_episode = 200
+
+	# Train mode
         self.train_mode = True
         
         # State size and action size

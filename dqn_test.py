@@ -69,8 +69,8 @@ class DQNTest(Node):
         self.model = self.create_qnetwork()
 
         # Load saved models
-        self.model.set_weights(load_model('stage1_episode300.h5').get_weights())
-        with open('stage1_episode300.json') as outfile:
+        self.model.set_weights(load_model('stage1_episode500.h5').get_weights())
+        with open('stage1_episode500.json') as outfile:
             param = json.load(outfile)
             self.epsilon = param.get('epsilon')
 
