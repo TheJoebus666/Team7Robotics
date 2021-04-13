@@ -57,10 +57,6 @@ class GazeboInterface(Node):
         self.task_succeed_service = self.create_service(Goal, 'task_succeed', self.task_succeed_callback, callback_group=self.callback_group)
         self.task_failed_service = self.create_service(Goal, 'task_failed', self.task_failed_callback,callback_group=self.callback_group)
 
-        print('- (minus) = Episode failed')
-        print('# (hash)  = Episode succeeded')
-        print('', end='')
-
     def reset_simulation(self):
         reset_req = Empty.Request()
 
@@ -108,7 +104,7 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('#', end='')
+        print('SUCCESS')
         self.consecutive_fails = 0
         return response
 
@@ -125,7 +121,7 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('-', end='')
+        print('fail')
         
         return response
 
@@ -138,7 +134,6 @@ class GazeboInterface(Node):
         response.pose_y = self.entity_pose_y
         response.success = True
         print('Environment initialized')
-        print('', end='')
         return response
 
     def generate_goal_pose(self):
