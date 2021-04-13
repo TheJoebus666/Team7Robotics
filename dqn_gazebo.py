@@ -138,7 +138,7 @@ class GazeboInterface(Node):
 
     def generate_goal_pose(self):
         if self.training:
-            if self.IndexCounter > 18:
+            if self.IndexCounter > 20:
                 self.generate_random_pose()
             else:
                 goal_pose_list = [
@@ -148,12 +148,14 @@ class GazeboInterface(Node):
                     [0.63, -0.49],
                     [0.36, -1.13],
                     [0.36, 1.06],
+                    [1.45, 0.0],
                     [-0.41, 1.06],
                     [-0.41, -1.13],
                     [0.36, 1.64],
                     [0.36, -1.64],
                     [1.78, 0.46],
                     [1.78, -1.05],
+                    [1.7, 0.0],
                     [-0.54, -1.67],
                     [-0.54, 1.67],
                     [-1.18, 0.03],

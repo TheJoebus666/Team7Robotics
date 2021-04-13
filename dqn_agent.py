@@ -74,7 +74,7 @@ class DQNAgent(Node):
         self.stage = 1
         self.load_episode = 200
 
-	# Train mode
+	    # Train mode
         self.train_mode = True
         
         # State size and action size
