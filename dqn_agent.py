@@ -166,7 +166,7 @@ class DQNAgent(Node):
 
                     print(
                         "Episode:", episode, "\t",
-                        "score:", round(score, 2), "\t",
+                        "score:", round(score, 2), "   \t",
                         "memory length:", len(self.replay_memory), "\t",
                         "epsilon:", round(self.epsilon, 3)
                         )
