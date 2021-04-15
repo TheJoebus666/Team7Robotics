@@ -177,8 +177,8 @@ class GazeboInterface(Node):
             self.IndexCounter = (self.IndexCounter + 1) % 5
 
     def generate_random_pose(self):
-        self.entity_pose_x = random.randrange(-23, 23) / 10
-        self.entity_pose_y = random.randrange(-23, 23) / 10
+        self.entity_pose_x = random.randrange(-21, 21) / 10
+        self.entity_pose_y = random.randrange(-21, 21) / 10
 
         while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
             self.entity_pose_x = random.randrange(-23, 23) / 10

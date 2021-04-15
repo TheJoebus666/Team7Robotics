@@ -57,7 +57,7 @@ class DQNTest(Node):
         self.discount_factor = 0.99
         self.learning_rate = 0.00025
         self.epsilon = 1.0
-        self.epsilon_decay = 0.99
+        self.epsilon_decay = 0.998
         self.epsilon_min = 0.05
         self.batch_size = 64
         self.train_start = 64
@@ -146,7 +146,7 @@ class DQNTest(Node):
         with strategy.scope():
             model = Sequential()
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(32,activation='relu'))
+            model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
