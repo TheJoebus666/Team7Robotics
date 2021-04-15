@@ -145,8 +145,8 @@ class DQNTest(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            model.add(Dense(256,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(128,activation='relu'))
+            model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
+            model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
