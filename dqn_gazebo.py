@@ -105,6 +105,7 @@ class GazeboInterface(Node):
         response.pose_y = self.entity_pose_y
         response.success = True
         print('SUCCESS')
+        print('-------------')
         self.consecutive_fails = 0
         return response
 
@@ -114,8 +115,9 @@ class GazeboInterface(Node):
         self.reset_simulation()
         self.spawn_entity()
 
-        if not self.training or self.consecutive_fails > 20:
+        if not self.training or self.consecutive_fails > 25:
             self.generate_goal_pose()
+            print('-------------')
             self.consecutive_fails = 0
         
         response.pose_x = self.entity_pose_x

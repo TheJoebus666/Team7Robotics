@@ -72,7 +72,7 @@ class DQNAgent(Node):
         # Resume from model file
         self.load_model = False
         self.stage = 1
-        self.load_episode = 200
+        self.load_episode = 0
 
 	    # Train mode
         self.train_mode = True
@@ -84,10 +84,10 @@ class DQNAgent(Node):
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        self.learning_rate = 0.00025
+        self.learning_rate = 0.00018
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 0.998
+        self.epsilon_decay = 0.999
         self.epsilon_min = 0.05
         self.batch_size = 40
 
@@ -238,7 +238,7 @@ class DQNAgent(Node):
         with strategy.scope():
             model = Sequential()
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(64,activation='relu'))
+            model.add(Dense(32,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
