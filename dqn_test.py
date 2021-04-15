@@ -146,7 +146,7 @@ class DQNTest(Node):
         with strategy.scope():
             model = Sequential()
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(32,activation='relu'))
+            model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
@@ -167,4 +167,3 @@ rclpy.spin(dqn_test)
 
 dqn_test.destroy()
 rclpy.shutdown()
-

@@ -76,7 +76,7 @@ class DQNAgent(Node):
 
 	    # Train mode
         self.train_mode = True
-        
+
         # State size and action size
         self.state_size = 26
         self.action_size = 5
@@ -125,7 +125,7 @@ class DQNAgent(Node):
         self.process()
 
     def process(self):
-        
+
         #environment init
         while not self.make_environment_client.wait_for_service(timeout_sec=1.0):
             print('Environment client ...')
@@ -193,7 +193,7 @@ class DQNAgent(Node):
             #self.epsilon = self.epsilon_min + (1.0 - self.epsilon_min) * math.exp(-1.0 * self.step_counter / self.epsilon_decay)
             self.epsilon *= self.epsilon_decay
             if (self.epsilon < self.epsilon_min):
-                self.epsilon = self.epsilon_min   
+                self.epsilon = self.epsilon_min
 
     def reset_environment(self):
         while not self.reset_environment_client.wait_for_service(timeout_sec=1.0):
@@ -238,7 +238,7 @@ class DQNAgent(Node):
         with strategy.scope():
             model = Sequential()
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(32,activation='relu'))
+            model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
