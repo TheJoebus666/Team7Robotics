@@ -40,7 +40,7 @@ class RLEnvironment(Node):
         self.robot_pose_y = 0.0
 
         self.action_size = 5
-        self.time_out = 800 # maximum number of actions in each episode
+        self.time_out = 600 # maximum number of actions in each episode
 
         self.done = False
         self.fail = False
@@ -229,7 +229,7 @@ class RLEnvironment(Node):
 
             obstacle_reward = 0.0
 
-            if self.min_obstacle_distance < 0.50:
+            if self.min_obstacle_distance < 0.90:
                 obstacle_reward = self.min_obstacle_distance - 2.0
 
             reward = obstacle_reward + (yaw_reward * ( 2 / self.goal_distance ))

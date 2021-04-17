@@ -84,7 +84,7 @@ class DQNAgent(Node):
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        self.learning_rate = 0.00025
+        self.learning_rate = 0.0002
         self.epsilon = 1.0
         self.step_counter = 0
         self.epsilon_decay = 0.998
@@ -240,7 +240,7 @@ class DQNAgent(Node):
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
             model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
-            model.add(Dense(self.action_size, activation='linear'))
+            model.add(Dense(self.action_size, activation=None))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
 
