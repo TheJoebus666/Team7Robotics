@@ -148,7 +148,7 @@ class DQNTest(Node):
             model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
             model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
-            model.add(Dense(self.action_size, activation='linear'))
+            model.add(Dense(self.action_size, activation=None))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
 
