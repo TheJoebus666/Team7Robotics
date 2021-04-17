@@ -40,7 +40,7 @@ class RLEnvironment(Node):
         self.robot_pose_y = 0.0
 
         self.action_size = 5
-        self.time_out = 600 # maximum number of actions in each episode
+        self.time_out = 2000 # maximum number of actions in each episode
 
         self.done = False
         self.fail = False
