@@ -50,7 +50,7 @@ class DQNTest(Node):
         ************************************************************"""
 
         # State size and action size
-        self.state_size = 26
+        self.state_size = 28
         self.action_size = 5
 
         # DQN hyperparameter
