@@ -78,18 +78,18 @@ class DQNAgent(Node):
         self.train_mode = True
 
         # State size and action size
-        self.state_size = 26
+        self.state_size = 28
         self.action_size = 5
-        self.max_training_episodes = 10003
+        self.max_training_episodes = 3000
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        self.learning_rate = 0.00018
+        self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
-        self.epsilon_decay = 0.999
+        self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
-        self.batch_size = 40
+        self.batch_size = 64
 
         # Replay memory
         self.replay_memory = collections.deque(maxlen=1000000)
@@ -99,7 +99,7 @@ class DQNAgent(Node):
         self.model = self.create_qnetwork()
         self.target_model = self.create_qnetwork()
         self.update_target_model()
-        self.update_target_after = 5000
+        self.update_target_after = 2000
         self.target_update_after_counter = 0
 
         # Load saved models
@@ -144,12 +144,12 @@ class DQNAgent(Node):
             state = self.reset_environment()
             time.sleep(1.0)
 
-            while True:
+            while local_step < 6000:
                 local_step += 1
                 action = int(self.get_action(state))
 
                 next_state, reward, done = self.step(action)
-                #print('reward ',reward, ' score ',score)
+        
                 score += reward
 
                 if self.train_mode:
@@ -177,7 +177,7 @@ class DQNAgent(Node):
                     break
 
                 # While loop rate
-                time.sleep(0.01)
+                #time.sleep(0.01)
 
             # Update result and save model every 100 episodes
             if self.train_mode:
