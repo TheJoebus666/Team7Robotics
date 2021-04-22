@@ -40,7 +40,7 @@ class RLEnvironment(Node):
         self.robot_pose_y = 0.0
 
         self.action_size = 5
-        self.time_out = 1000000 # maximum number of actions in each episode
+        self.time_out = 1000 # maximum number of actions in each episode
 
         self.done = False
         self.fail = False
@@ -49,7 +49,7 @@ class RLEnvironment(Node):
         # parameters to calculate the reward
         self.goal_angle = 0.0
         self.goal_distance = 1.0
-        self.init_goal_distance = 0.1
+        self.init_goal_distance = 0.5
         self.scan_ranges = []
         self.min_obstacle_distance = 10.0
 
@@ -201,9 +201,6 @@ class RLEnvironment(Node):
             self.cmd_vel_pub.publish(Twist())  # robot stop
             self.local_step = 0
             self.call_task_succeed()
-            self.init_goal_distance = math.sqrt(
-            (self.goal_pose_x - self.robot_pose_x) ** 2
-            + (self.goal_pose_y - self.robot_pose_y) ** 2)
 
         # Fail
         if self.min_obstacle_distance < 0.25:  # unit: m
@@ -230,21 +227,20 @@ class RLEnvironment(Node):
         if self.train_mode:
             yaw_reward = 1 - 2 * math.sqrt(math.fabs(self.goal_angle / math.pi))
 
-            distance_reward = (2 * self.init_goal_distance) / (self.init_goal_distance + self.goal_distance) - 1
+            distance_reward = (2 * self.init_goal_distance) / \
+                              (self.init_goal_distance + self.goal_distance) - 1
 
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.50:
-                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
+                obstacle_reward = -3.0  # self.min_obstacle_distance - 0.45
 
             # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
             reward = distance_reward + obstacle_reward + yaw_reward
             # + for succeed, - for fail
             if self.succeed:
-                print("succeed")
-                reward = 200.0
+                reward = 15.0
             elif self.fail:
-                print("fail")
-                reward = -150.0
+                reward = -10.0
         else:
             if self.succeed:
                 reward = 5.0
