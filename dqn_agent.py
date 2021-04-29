@@ -31,7 +31,7 @@ from turtlebot3_msgs.srv import Dqn
 from std_srvs.srv import Empty
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Conv2D, Flatten
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
@@ -72,25 +72,23 @@ class DQNAgent(Node):
         # Stage
         self.stage = int(stage)
         self.train_mode = True
-        
         # State size and action size
-        self.state_size = 26
+        self.state_size = 26  # 180 lidar rays
         self.action_size = 5
         self.max_training_episodes = 10003
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        #was originally 0.0007
-        self.learning_rate = 0.00025
+        self.learning_rate = 0.0007
         self.epsilon = 1.0
         self.step_counter = 0
         #WAS 20000 * self.stage
         self.epsilon_decay = 0.99
         self.epsilon_min = 0.05
-        self.batch_size = 64
+        self.batch_size = 128
 
         # Replay memory
-        self.replay_memory = collections.deque(maxlen=1000000)
+        self.replay_memory = collections.deque(maxlen=500000)
         self.min_replay_memory_size = 5000
 
         # Build model and target model
@@ -236,14 +234,13 @@ class DQNAgent(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            #model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
-            #model.add(Dense(256, activation='relu'))
-            #model.add(Dense(128, activation='relu'))
-
-
-            model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(64,activation='relu'))
-            model.add(Dropout(0.2))
+            model.add(Dense(2048, input_shape=(self.state_size,),activation='relu'))
+            model.add(Dense(1024, activation='relu'))
+            model.add(Dense(512, activation='relu'))
+            model.add(Dense(256, activation='relu'))
+            model.add(Dense(128, activation='relu'))
+            model.add(Dense(64, activation='relu'))
+            model.add(Dense(32, activation='relu'))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
