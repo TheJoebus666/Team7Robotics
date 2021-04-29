@@ -31,7 +31,7 @@ from turtlebot3_msgs.srv import Dqn
 from std_srvs.srv import Empty
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Conv2D, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
@@ -237,8 +237,14 @@ class DQNAgent(Node):
     def create_qnetwork(self):
         with strategy.scope():
             model = Sequential()
-            model.add(Dense(64,input_shape=(self.state_size,), activation='relu'))
-            model.add(Dense(64,activation='relu'))
+
+            model.add(Conv2D(32, (8,8), activation='relu', input_shape=(84,84,4), stride=4))
+            model.add(Conv2D(64, (4,4), activation='relu', stride=2))
+            model.add(Conv2D(64, (3,3), activation='relu', stride=1))
+
+            #input_shape=(self.state_size,)
+            model.add(Dense(512, activation='relu'))
+            #model.add(Dense(64,activation='relu'))
             model.add(Dropout(0.2))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
