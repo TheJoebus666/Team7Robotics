@@ -238,14 +238,21 @@ class DQNAgent(Node):
         with strategy.scope():
             model = Sequential()
 
-            model.add(Conv2D(32, (8,8), activation='relu', input_shape=(84,84,4), stride=4))
-            model.add(Conv2D(64, (4,4), activation='relu', stride=2))
-            model.add(Conv2D(64, (3,3), activation='relu', stride=1))
-
-            #input_shape=(self.state_size,)
-            model.add(Dense(512, activation='relu'))
-            #model.add(Dense(64,activation='relu'))
+            model.add(Dense(2048, activation='relu', input_shape=(self.state_size,)))
             model.add(Dropout(0.2))
+            model.add(Dense(1024, activation='relu'))
+            model.add(Dropout(0.2))
+            model.add(Dense(512, activation='relu'))
+            model.add(Dropout(0.2))
+            model.add(Dense(256, activation='relu'))
+            model.add(Dropout(0.2))
+            model.add(Dense(128, activation='relu'))
+            model.add(Dropout(0.2))
+            model.add(Dense(64, activation='relu'))
+            model.add(Dropout(0.2))
+            model.add(Dense(32, activation='relu'))
+            model.add(Dropout(0.2))
+            
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
