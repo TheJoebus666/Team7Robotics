@@ -79,12 +79,12 @@ class DQNAgent(Node):
 
         # DQN hyperparameter
         self.discount_factor = 0.99
-        self.learning_rate = 0.0007
+        self.learning_rate = 0.00025
         self.epsilon = 1.0
         self.step_counter = 0
         self.epsilon_decay = 20000 * self.stage
         self.epsilon_min = 0.05
-        self.batch_size = 128
+        self.batch_size = 64
 
         # Replay memory
         self.replay_memory = collections.deque(maxlen=500000)
@@ -229,12 +229,12 @@ class DQNAgent(Node):
             model = Sequential()
             model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
             model.add(Dense(256, activation='relu'))
-			model.add(Dense(256, activation='relu'))
-			model.add(Dense(128, activation='relu'))
+            #model.add(Dense(256, activation='relu'))
             model.add(Dense(128, activation='relu'))
-			model.add(Dense(64, activation='relu'))
-			model.add(Dense(64, activation='relu'))
-			model.add(Dense(32, activation='relu'))
+            #model.add(Dense(128, activation='relu'))
+            model.add(Dense(64, activation='relu'))
+            #model.add(Dense(64, activation='relu'))
+            model.add(Dense(32, activation='relu'))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
