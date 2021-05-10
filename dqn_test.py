@@ -69,8 +69,8 @@ class DQNTest(Node):
         self.model = self.create_qnetwork()
 
         # Load saved models
-        self.model.set_weights(load_model('stage1_episode500.h5').get_weights())
-        with open('stage1_episode500.json') as outfile:
+        self.model.set_weights(load_model('stage1_episode4500.h5').get_weights())
+        with open('stage1_episode4500.json') as outfile:
             param = json.load(outfile)
             self.epsilon = param.get('epsilon')
 
@@ -147,7 +147,12 @@ class DQNTest(Node):
             model = Sequential()
             model.add(Dense(512, input_shape=(self.state_size,), activation='relu'))
             model.add(Dense(256, activation='relu'))
+            #model.add(Dense(256, activation='relu'))
             model.add(Dense(128, activation='relu'))
+            #model.add(Dense(128, activation='relu'))
+            model.add(Dense(64, activation='relu'))
+            #model.add(Dense(64, activation='relu'))
+            model.add(Dense(32, activation='relu'))
             model.add(Dense(self.action_size, activation='linear'))
             model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
             model.summary()
