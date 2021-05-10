@@ -201,6 +201,7 @@ class RLEnvironment(Node):
             self.cmd_vel_pub.publish(Twist())  # robot stop
             self.local_step = 0
             self.call_task_succeed()
+            self.init_goal_distance = math.sqrt((self.goal_pose_x - self.robot_pose_x) ** 2 + (self.goal_pose_y - self.robot_pose_y) ** 2)
 
         # Fail
         if self.min_obstacle_distance < 0.15:  # unit: m
@@ -210,6 +211,7 @@ class RLEnvironment(Node):
             self.cmd_vel_pub.publish(Twist())  # robot stop
             self.local_step = 0
             self.call_task_failed()
+            self.init_goal_distance = math.sqrt((self.goal_pose_x - self.robot_pose_x) ** 2 + (self.goal_pose_y - self.robot_pose_y) ** 2)
 
         if self.local_step == self.time_out:
             self.get_logger().info("Time out!")
@@ -228,29 +230,28 @@ class RLEnvironment(Node):
                         
             yaw_reward = (1 - 2 * math.sqrt(math.fabs(self.goal_angle / math.pi)))
 
-            distance_reward = ((1 * self.init_goal_distance) / \
-                             (self.init_goal_distance + self.goal_distance) - 0.5)
-
-            #distance_reward = (1 / (self.goal_distance ))
+            distance_reward = (2*self.init_goal_distance)/(self.init_goal_distance + self.goal_distance) - 1
 
             obstacle_reward = 0.0
-            if self.min_obstacle_distance < 0.4:
-                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
 
-            # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
+            if self.min_obstacle_distance < 0.4:
+                obstacle_reward = self.min_obstacle_distance - 5.0
+
+           
             reward = obstacle_reward + yaw_reward + distance_reward
+
             # + for succeed, - for fail
             if self.succeed:
-                reward += 200.0
+                reward = 200.0
             elif self.fail and self.goal_distance <= 0.2:
-                reward += 0
+                reward = 0
             elif self.fail and self.goal_distance > 0.2:
-                reward += -100.0
+                reward = -100.0
         else:
             if self.succeed:
-                reward += 5.0
+                reward = 5.0
             elif self.fail:
-                reward += -5.0
+                reward = -5.0
             else:
                 reward = 0.0
         self.get_logger().info('reward: %f ' % reward)

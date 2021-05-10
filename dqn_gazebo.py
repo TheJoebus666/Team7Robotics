@@ -29,17 +29,22 @@ import sys
 
 #a node to generate goals
 class GazeboInterface(Node):
-    def __init__(self, stage):
+    def __init__(self, training):
         super().__init__('gazebo_interface')
-        self.stage = int(stage)
+
+        if training.lower() == 'false' or training == '0':
+            self.training = False
+        else:
+            self.training = True
+
+        self.consecutive_fails = 0
 
         # Read the 'Goal' Entity Model
         self.entity_name = 'Goal'
         self.entity = open('./goal_box/model.sdf', 'r').read()
 
         # initial entity(Goal) position
-        self.entity_pose_x = 0.5
-        self.entity_pose_y = 0.0
+        self.IndexCounter = 0
 
         #Initialize clients
         self.delete_entity_client = self.create_client(DeleteEntity, 'delete_entity')
@@ -54,6 +59,9 @@ class GazeboInterface(Node):
 
     def reset_simulation(self):
         reset_req = Empty.Request()
+
+        if not self.training:
+            self.IndexCounter = 0
 
         # check connection to the service server
         while not self.reset_simulation_client.wait_for_service(timeout_sec=1.0):
@@ -96,23 +104,33 @@ class GazeboInterface(Node):
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('A new goal generated.')
+        print('SUCCESS')
+        print('-------------')
+        self.consecutive_fails = 0
         return response
 
     def task_failed_callback(self, request, response):
+        self.consecutive_fails = self.consecutive_fails + 1
         self.delete_entity()
         self.reset_simulation()
-        self.generate_goal_pose()
         self.spawn_entity()
+
+        if not self.training or self.consecutive_fails > 25:
+            self.generate_goal_pose()
+            print('-------------')
+            self.consecutive_fails = 0
+        
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
         response.success = True
-        print('Environment reset')
+        print('fail')
+        
         return response
 
     def initialize_env_callback(self, request, response):
         self.delete_entity()
         self.reset_simulation()
+        self.generate_goal_pose()
         self.spawn_entity()
         response.pose_x = self.entity_pose_x
         response.pose_y = self.entity_pose_y
@@ -121,16 +139,52 @@ class GazeboInterface(Node):
         return response
 
     def generate_goal_pose(self):
-        if self.stage != 4:
-            self.entity_pose_x = random.randrange(-23, 23) / 10
-            self.entity_pose_y = random.randrange(-23, 23) / 10
+        if self.training:
+            if self.IndexCounter > 20:
+                self.generate_random_pose()
+            else:
+                goal_pose_list = [
+                    [0.72, 0.0],
+                    [1.45, 0.0],
+                    [0.63, 0.56],
+                    [0.63, -0.49],
+                    [0.36, -1.13],
+                    [0.36, 1.06],
+                    [1.45, 0.0],
+                    [-0.41, 1.06],
+                    [-0.41, -1.13],
+                    [0.36, 1.64],
+                    [0.36, -1.64],
+                    [1.78, 0.46],
+                    [1.78, -1.05],
+                    [1.7, 0.0],
+                    [-0.54, -1.67],
+                    [-0.54, 1.67],
+                    [-1.18, 0.03],
+                    [1.7, 1.7],
+                    [-1.7, 1.7],
+                    [1.7, -1.7],
+                    [-1.7, -1.7]
+                ]
+                self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+                self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+                self.IndexCounter = self.IndexCounter + 1
+            
         else:
-            goal_pose_list = [[1.0, 0.0], [2.0, -1.5], [0.0, -2.0], [2.0, 2.0], [0.8, 2.0],
-                              [-1.9, 1.9], [-1.9, 0.2], [-1.9, -0.5], [-2.0, -2.0], [-0.5, -1.0], [-0.5, 2.0], [2.0, -0.5]]
-            rand_index = random.randint(0, 11)
-            self.entity_pose_x = goal_pose_list[rand_index][0]
-            self.entity_pose_y = goal_pose_list[rand_index][1]
+            goal_pose_list = [[1.7, 1.7], [-1.7, -1.7], [1.7, -1.7], [-1.7, 1.7], [0.0,0.0]]
+            self.entity_pose_x = goal_pose_list[self.IndexCounter][0]
+            self.entity_pose_y = goal_pose_list[self.IndexCounter][1]
+            self.IndexCounter = (self.IndexCounter + 1) % 5
 
+    def generate_random_pose(self):
+        self.entity_pose_x = random.randrange(-21, 21) / 10
+        self.entity_pose_y = random.randrange(-21, 21) / 10
+
+        while abs(self.entity_pose_x) > 0.8 and abs(self.entity_pose_x) < 1.2:
+            self.entity_pose_x = random.randrange(-23, 23) / 10
+        
+        while abs(self.entity_pose_y) > 0.8 and abs(self.entity_pose_y) < 1.2:
+            self.entity_pose_y = random.randrange(-23, 23) / 10
 
 def main(args=sys.argv[1]):
     rclpy.init(args=args)
@@ -142,3 +196,4 @@ def main(args=sys.argv[1]):
 
 if __name__ == '__main__':
     main()
+
