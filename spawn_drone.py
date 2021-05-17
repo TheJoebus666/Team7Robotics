@@ -6,10 +6,12 @@ import sys
 
 import rclpy
 import transformations
+import image_control
 from gazebo_msgs.srv import SpawnEntity
 from geometry_msgs.msg import Pose
 from tello_msgs.srv import TelloAction
 from rclpy.node import Node
+import time
 
 class TakeOffClient(Node):
     def __init__(self):
@@ -65,5 +67,20 @@ inject(f.read(), p)
 rclpy.init()
 take_off_client = TakeOffClient()
 service_return = take_off_client.send_request('takeoff')
-take_off_client.destroy_node()
+time.sleep(10.0)
+
+tello_subscriber = image_control.TelloSubscriber()
+tello_subscriber.rotate(0.5)
+
+number_of_seconds = 0
+
+while number_of_seconds < 4:
+    frame = tello_subscriber.grab_frame()
+    time.sleep(1.0)
+    number_of_seconds += 1
+
+tello_subscriber.stop()
+corner = number_of_seconds % 5
+
+input("Press any key to shut down rclpy")
 rclpy.shutdown()
