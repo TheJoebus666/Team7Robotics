@@ -81,6 +81,7 @@ while number_of_seconds < 4:
 
 tello_subscriber.stop()
 corner = number_of_seconds % 5
+print("corner number: " + corner)
 
 input("Press any key to shut down rclpy")
 rclpy.shutdown()
