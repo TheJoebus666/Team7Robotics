@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
+import drone_goals
 import cv2
 import numpy as np
 import time
@@ -18,6 +19,7 @@ class TelloSubscriber(Node):
         self.bridge = CvBridge()
         self.node = rclpy.create_node('teleop_twist_keyboard')
         self.pub = self.node.create_publisher(geometry_msgs.msg.Twist, '/drone1/cmd_vel', 10)
+        self.goal_generator = drone_goals.GoalGenerator()
 
         self.speed = 0.2 # max 0.22
         self.turn = 0.38 # max 1.82
@@ -30,6 +32,13 @@ class TelloSubscriber(Node):
         if (self.corner_number > 0):
             self.rotate(5.2)
         self.corner_number += 1
+
+        # DETECT if the person is in the image here. This code currently just
+        # generates the goal at corner 2
+        person_in_image = self.corner_number == 2
+        if (person_in_image):
+            self.goal_generator.generate_goal_pose(self.corner_number)
+
         cv2.imshow("IMAGE", frame)
         cv2.waitKey(10)
 
