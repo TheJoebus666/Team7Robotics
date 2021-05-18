@@ -12,6 +12,7 @@ from geometry_msgs.msg import Pose
 from tello_msgs.srv import TelloAction
 from rclpy.node import Node
 import time
+import cv2
 
 class TakeOffClient(Node):
     def __init__(self):
