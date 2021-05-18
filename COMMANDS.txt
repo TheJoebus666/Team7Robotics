@@ -1,0 +1,17 @@
+== Task 1 ==
+gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so ./Task1\ Environment.world
+python dqn_gazebo.py false
+python dqn_environment.py
+python dqn_agent.py 1
+
+== Task 2 ==
+First command depends on which environment (up left, down left, etc.):
+gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so ./Task2\ Environment\ 1\ up\ left.world
+gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so ./Task2\ Environment\ 2\ down\ left.world
+gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so ./Task2\ Environment\ 3\ down\ right.world
+gazebo --verbose -s libgazebo_ros_init.so -s libgazebo_ros_factory.so ./Task2\ Environment\ 4\ up\ right.world
+
+The other commands:
+python spawn_drone.py
+python dqn_test.py
+python dqn_environment.py

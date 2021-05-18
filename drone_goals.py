@@ -28,7 +28,7 @@ import random
 import sys
 
 #a node to generate goals
-class GoalGenerator(Node):
+class GazeboInterface(Node):
     def __init__(self):
         super().__init__('gazebo_interface')
 
@@ -39,15 +39,41 @@ class GoalGenerator(Node):
         #Initialize clients
         self.delete_entity_client = self.create_client(DeleteEntity, 'delete_entity')
         self.spawn_entity_client = self.create_client(SpawnEntity, 'spawn_entity')
+        self.reset_simulation_client = self.create_client(Empty, 'reset_simulation')
 
         # Initialize services
         self.callback_group = MutuallyExclusiveCallbackGroup()
-        self.initialize_env_service = self.create_service(Goal, 'initialize_env', self.dummy_callback,callback_group=self.callback_group)
-        self.task_succeed_service = self.create_service(Goal, 'task_succeed', self.dummy_callback, callback_group=self.callback_group)
-        self.task_failed_service = self.create_service(Goal, 'task_failed', self.dummy_callback,callback_group=self.callback_group)
+        self.initialize_env_service = self.create_service(Goal, 'initialize_env', self.initialize_env_callback, callback_group=self.callback_group)
+        self.task_succeed_service = self.create_service(Goal, 'task_succeed', self.task_succeed_callback, callback_group=self.callback_group)
+        self.task_failed_service = self.create_service(Goal, 'task_failed', self.task_failed_callback, callback_group=self.callback_group)
 
-    def dummy_callback(self, request, response):
+    def task_succeed_callback(self, request, response):
+        response.pose_x = self.entity_pose_x
+        response.pose_y = self.entity_pose_y
+        response.success = True
         return response
+
+    def task_failed_callback(self, request, response):
+        response.pose_x = self.entity_pose_x
+        response.pose_y = self.entity_pose_y
+        response.success = True
+        return response
+
+    def initialize_env_callback(self, request, response):
+        response.pose_x = self.entity_pose_x
+        response.pose_y = self.entity_pose_y
+        response.success = True
+        print('Environment initialized')
+        return response
+
+    def reset_simulation(self):
+        reset_req = Empty.Request()
+
+        # check connection to the service server
+        while not self.reset_simulation_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().warn('service for reset_simulation is not available, waiting ...')
+
+        self.reset_simulation_client.call_async(reset_req)
 
     def delete_entity(self):
         delete_req = DeleteEntity.Request()

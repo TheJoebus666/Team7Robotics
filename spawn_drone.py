@@ -3,16 +3,14 @@
 """Inject an SDF or URDF file into Gazebo"""
 
 import sys
-
-import rclpy
 import transformations
+import rclpy
 import image_control
 from gazebo_msgs.srv import SpawnEntity
 from geometry_msgs.msg import Pose
 from tello_msgs.srv import TelloAction
 from rclpy.node import Node
 import time
-import cv2
 
 class TakeOffClient(Node):
     def __init__(self):
@@ -73,7 +71,9 @@ time.sleep(10.0)
 tello_subscriber = image_control.TelloSubscriber()
 rclpy.spin_once(tello_subscriber)
 time.sleep(1.0)
-tello_subscriber.rotate(4.2)
+tello_subscriber.move_backward()
+time.sleep(1.0)
+tello_subscriber.rotate(3.0)
 time.sleep(1.0)
 rclpy.spin(tello_subscriber)
 

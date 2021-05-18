@@ -19,28 +19,35 @@ class TelloSubscriber(Node):
         self.bridge = CvBridge()
         self.node = rclpy.create_node('teleop_twist_keyboard')
         self.pub = self.node.create_publisher(geometry_msgs.msg.Twist, '/drone1/cmd_vel', 10)
-        self.goal_generator = drone_goals.GoalGenerator()
+        self.goal_generator = drone_goals.GazeboInterface()
 
-        self.speed = 0.2 # max 0.22
+        self.speed = 0.10 # max 0.22
         self.turn = 0.38 # max 1.82
 
         self.corner_number = 0
 
     def listener_callback(self, image_message):
         frame = self.bridge.imgmsg_to_cv2(image_message, desired_encoding='bgr8')
-        time.sleep(1.0)
-        if (self.corner_number > 0):
-            self.rotate(5.2)
-        self.corner_number += 1
+
+        cv2.imshow("Corner", frame)
+        cv2.waitKey(10)
 
         # DETECT if the person is in the image here. This code currently just
         # generates the goal at corner 2
-        person_in_image = self.corner_number == 2
+        person_in_image = self.corner_number == 4
         if (person_in_image):
             self.goal_generator.generate_goal_pose(self.corner_number)
+            rclpy.spin(self.goal_generator)
 
-        cv2.imshow("IMAGE", frame)
-        cv2.waitKey(10)
+        # Rotate robot for next corner
+        if (self.corner_number > 0):
+            self.rotate(5.8)
+        time.sleep(1.0)
+        
+        self.corner_number += 1
+
+        if (self.corner_number > 4):
+            self.corner_number = 1
 
     def grab_frame(self):
         return self.frame
