@@ -12,6 +12,7 @@ from geometry_msgs.msg import Pose
 from tello_msgs.srv import TelloAction
 from rclpy.node import Node
 import time
+import cv2
 
 class TakeOffClient(Node):
     def __init__(self):
@@ -76,6 +77,7 @@ number_of_seconds = 0
 
 while number_of_seconds < 4:
     frame = tello_subscriber.grab_frame()
+    cv2.imshow("preview", frame)
     time.sleep(1.0)
     number_of_seconds += 1
 
