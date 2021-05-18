@@ -5,7 +5,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
-import numpy
+import numpy as np
 import time
 
 class TelloSubscriber(Node):
@@ -22,10 +22,16 @@ class TelloSubscriber(Node):
         self.speed = 0.2 # max 0.22
         self.turn = 0.38 # max 1.82
 
-        self.frame = numpy.ones([200,200,3])
+        self.corner_number = 0
 
     def listener_callback(self, image_message):
-        self.frame = self.bridge.imgmsg_to_cv2(image_message, desired_encoding='bgr8')
+        frame = self.bridge.imgmsg_to_cv2(image_message, desired_encoding='bgr8')
+        time.sleep(1.0)
+        if (self.corner_number > 0):
+            self.rotate(5.2)
+        self.corner_number += 1
+        cv2.imshow("IMAGE", frame)
+        cv2.waitKey(10)
 
     def grab_frame(self):
         return self.frame
@@ -54,9 +60,9 @@ class TelloSubscriber(Node):
         twist.angular.z = 0 * self.turn              
         print(twist)
         self.pub.publish(twist)
-        time.sleep(4.0)
+        time.sleep(1.0)
         self.stop()
-        time.sleep(2.0)
+        time.sleep(1.0)
     
     def rotate(self, degrees):
         twist = geometry_msgs.msg.Twist()
@@ -65,9 +71,12 @@ class TelloSubscriber(Node):
         twist.linear.z = 0 * self.speed
         twist.angular.x = 0.0
         twist.angular.y = 0.0
-        twist.angular.z = 1.0 * degrees
+        twist.angular.z = 0.1 * degrees
         print(twist)
         self.pub.publish(twist)
+        time.sleep(1.0)
+        self.stop()
+        time.sleep(1.0)
 
     def stop(self):
         twist = geometry_msgs.msg.Twist()

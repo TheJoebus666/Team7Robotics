@@ -70,18 +70,11 @@ service_return = take_off_client.send_request('takeoff')
 time.sleep(10.0)
 
 tello_subscriber = image_control.TelloSubscriber()
-tello_subscriber.rotate(0.5)
-
-number_of_seconds = 0
-
-while number_of_seconds < 4:
-    frame = tello_subscriber.grab_frame()
-    time.sleep(1.0)
-    number_of_seconds += 1
-
-tello_subscriber.stop()
-corner = number_of_seconds % 5
-print("corner number: " + corner)
+rclpy.spin_once(tello_subscriber)
+time.sleep(1.0)
+tello_subscriber.rotate(4.2)
+time.sleep(1.0)
+rclpy.spin(tello_subscriber)
 
 input("Press any key to shut down rclpy")
 rclpy.shutdown()
