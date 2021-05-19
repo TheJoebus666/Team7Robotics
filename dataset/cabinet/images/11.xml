@@ -1,0 +1,26 @@
+<annotation>
+	<folder>down right</folder>
+	<filename>scene00351.jpg</filename>
+	<path>/home/lunet/cotc/Documents/Coursework/Training Photos/down right/scene00351.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>960</width>
+		<height>736</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>human</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>39</xmin>
+			<ymin>220</ymin>
+			<xmax>247</xmax>
+			<ymax>736</ymax>
+		</bndbox>
+	</object>
+</annotation>
