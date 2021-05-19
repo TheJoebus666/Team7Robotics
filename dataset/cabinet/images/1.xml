@@ -1,7 +1,7 @@
 <annotation>
-	<folder>down left</folder>
-	<filename>scene00441.jpg</filename>
-	<path>/home/lunet/cotc/Documents/Coursework/Training Photos/down left/scene00441.jpg</path>
+	<folder>down right</folder>
+	<filename>scene00361.jpg</filename>
+	<path>/home/lunet/cotc/Documents/Coursework/Training Photos/down right/scene00361.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -17,9 +17,9 @@
 		<truncated>1</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>762</xmin>
-			<ymin>208</ymin>
-			<xmax>960</xmax>
+			<xmin>196</xmin>
+			<ymin>228</ymin>
+			<xmax>375</xmax>
 			<ymax>736</ymax>
 		</bndbox>
 	</object>
