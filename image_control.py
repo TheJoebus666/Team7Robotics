@@ -41,7 +41,7 @@ class TelloSubscriber(Node):
 
         # Rotate robot for next corner
         if (self.corner_number > 0):
-            self.rotate(5.8)
+            self.rotate(5.0)
         time.sleep(1.0)
         
         self.corner_number += 1

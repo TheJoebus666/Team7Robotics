@@ -73,7 +73,7 @@ rclpy.spin_once(tello_subscriber)
 time.sleep(1.0)
 tello_subscriber.move_backward()
 time.sleep(1.0)
-tello_subscriber.rotate(3.0)
+tello_subscriber.rotate(2.7)
 time.sleep(1.0)
 rclpy.spin(tello_subscriber)
 
