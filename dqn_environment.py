@@ -100,11 +100,6 @@ class RLEnvironment(Node):
         return response
 
     def call_task_succeed(self):
-        """
-        When the task is succeed (by reaching the goal) this client will send a request to the gazebo_interface service
-        the client waits until gets back the response (goal position) form service
-        :return:
-        """
         while not self.task_succeed_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().warn('service for task succeed is not available, waiting ...')
 
@@ -121,11 +116,6 @@ class RLEnvironment(Node):
             self.get_logger().error('task succeed service call failed')
 
     def call_task_failed(self):
-        """
-        When the task is failed (either collision or timeout) this client will send a request to the gazebo_interface service
-        the client waits until gets back the response (goal position) form service
-        :return:
-        """
         while not self.task_failed_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().warn('service for task failed is not available, waiting ...')
 
@@ -177,11 +167,6 @@ class RLEnvironment(Node):
         self.goal_angle = goal_angle
 
     def calculate_state(self):
-        """
-        calculates the robot state (lidar rays , distance to the goal ,robots heading angle toward the goal)
-        Checks the task succeed and the task failed
-        :return:
-        """
         state = list()
         # state.append(float(self.goal_pose_x))
         # state.append(float(self.goal_pose_y))
@@ -220,24 +205,16 @@ class RLEnvironment(Node):
         return state
 
     def calculate_reward(self, action):
-        """
-        calculates the reward accumulating by agent after doing each action, feel free to change the reward function
-        :return:
-        """
         if self.train_mode:
                         
             yaw_reward = (1 - 2 * math.sqrt(math.fabs(self.goal_angle / math.pi)))
 
-            distance_reward = ((1 * self.init_goal_distance) / \
-                             (self.init_goal_distance + self.goal_distance) - 0.5)
-
-            #distance_reward = (1 / (self.goal_distance ))
+            distance_reward = ((1 * self.init_goal_distance) / (self.init_goal_distance + self.goal_distance) - 0.5)
 
             obstacle_reward = 0.0
             if self.min_obstacle_distance < 0.4:
-                obstacle_reward = -5.0  # self.min_obstacle_distance - 0.45
+                obstacle_reward = -5.0
 
-            # reward = self.action_reward[action] + (0.1 * (2-self.goal_distance)) + obstacle_reward
             reward = obstacle_reward + yaw_reward + distance_reward
             # + for succeed, - for fail
             if self.succeed:
