@@ -66,7 +66,7 @@ inject(f.read(), p)
 rclpy.init()
 take_off_client = TakeOffClient()
 service_return = take_off_client.send_request('takeoff')
-time.sleep(10.0)
+time.sleep(6.0)
 
 tello_subscriber = image_control.TelloSubscriber()
 rclpy.spin_once(tello_subscriber)
